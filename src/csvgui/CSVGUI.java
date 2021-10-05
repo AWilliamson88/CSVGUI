@@ -81,10 +81,35 @@ public class CSVGUI extends Application {
 
         TableColumn columnTwo = new TableColumn("Last Name");
         columnTwo.setCellValueFactory(new PropertyValueFactory<>("lastName"));
-
+        
+        columnTwo.setCellFactory(TextFieldTableCell.forTableColumn());
+        columnTwo.setOnEditCommit(
+            new EventHandler<CellEditEvent<Record, String>>() {
+                @Override
+                public void handle(CellEditEvent<Record, String> t) {
+                    ((Record) t.getTableView().getItems().get(
+                        t.getTablePosition().getRow())
+                        ).setLastName(t.getNewValue());
+                }
+            }
+        );
+        
+        
         TableColumn columnThree = new TableColumn("Hobby");
         columnThree.setCellValueFactory(new PropertyValueFactory<>("hobby"));
 
+        columnThree.setCellFactory(TextFieldTableCell.forTableColumn());
+        columnThree.setOnEditCommit(
+            new EventHandler<CellEditEvent<Record, String>>() {
+                @Override
+                public void handle(CellEditEvent<Record, String> t) {
+                    ((Record) t.getTableView().getItems().get(
+                        t.getTablePosition().getRow())
+                        ).setHobby(t.getNewValue());
+                }
+            }
+        );
+        
         tableView.setItems(dataList);
         tableView.getColumns().addAll(columnOne, columnTwo, columnThree);
 
@@ -166,7 +191,6 @@ public class CSVGUI extends Application {
                     dataList.add(record);
                 }
             }
-            System.out.println("closed.");
 
         } catch (FileNotFoundException e) {
             System.out.println("The File was not found.");
