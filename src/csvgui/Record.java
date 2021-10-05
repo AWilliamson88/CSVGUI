@@ -14,36 +14,50 @@ import javafx.beans.property.SimpleStringProperty;
  */
 public class Record {
 
-    private SimpleStringProperty one;
-    private SimpleStringProperty two;
-    private SimpleStringProperty three;
+    
 
-    public String getOne() {
-        return one.get();
+    private final SimpleStringProperty firstName;
+    private final SimpleStringProperty lastName;
+    private final SimpleStringProperty hobby;
+
+    public String getFirstName() {
+        return firstName.get();
     }
 
-    public String getTwo() {
-        return two.get();
+    public String getLastName() {
+        return lastName.get();
     }
 
-    public String getThree() {
-        return three.get();
+    public String getHobby() {
+        return hobby.get();
+    }
+    
+    public void setFirstName(String fName) {
+        firstName.set(fName);
+    }
+
+    public void setLastName(String lName) {
+        lastName.set(lName);
+    }
+
+    public void setHobby(String newHobby) {
+        hobby.set(newHobby);
     }
 
     public Record(String newOne, String newTwo, String newThree) {
-        one = new SimpleStringProperty(newOne);
-        two = new SimpleStringProperty(newTwo);
-        three = new SimpleStringProperty(newThree);
+        firstName = new SimpleStringProperty(newOne);
+        lastName = new SimpleStringProperty(newTwo);
+        hobby = new SimpleStringProperty(newThree);
     }
 
     public Record(String[] array) {
-        one = new SimpleStringProperty(array[0]);
-        two = new SimpleStringProperty(array[1]);
-        three = new SimpleStringProperty(array[2]);
+        firstName = new SimpleStringProperty(array[0]);
+        lastName = new SimpleStringProperty(array[1]);
+        hobby = new SimpleStringProperty(array[2]);
     }
     
     public String[] getArray() {
-        String[] s = new String[]{one.get(), two.get(), three.get()};
+        String[] s = new String[]{getFirstName(), getLastName(), getHobby()};
         return s;
     }
 }

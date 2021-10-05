@@ -13,11 +13,14 @@ import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
@@ -55,29 +58,45 @@ public class CSVGUI extends Application {
 
         Group root = new Group();
 
+        tableView.setEditable(true);
         TableColumn columnOne = new TableColumn("First Name");
-        columnOne.setCellValueFactory(new PropertyValueFactory<>("one"));
+        columnOne.setCellValueFactory(new PropertyValueFactory<>("firstName"));
+        // Add the code to edit the individual cells here.
+        columnOne.setCellFactory(TextFieldTableCell.<Record>forTableColumn());
+        columnOne.setOnEditCommit(
+                new EventHandler<CellEditEvent<Record, String>>() {
+            @Override
+            public void handle(CellEditEvent<Record, String> t) {
+                ((Record) t.getTableView().getItems().get(
+                        t.getTablePosition().getRow())).setFirstName(t.getNewValue());
+            }
+        }
+        );
+//        columnOne.setOnEditCommit(
+//                (CellEditEvent<Record, String> t) -> {
+//                    ((Record) t.getTableView().getItems().get(
+//                        t.getTablePosition().getRow())
+//                        ).setFirstName(t.getNewValue());
+//        });
 
         TableColumn columnTwo = new TableColumn("Last Name");
-        columnTwo.setCellValueFactory(new PropertyValueFactory<>("two"));
+        columnTwo.setCellValueFactory(new PropertyValueFactory<>("lastName"));
 
-        TableColumn columnThree = new TableColumn("Hobbies");
-        columnThree.setCellValueFactory(new PropertyValueFactory<>("three"));
+        TableColumn columnThree = new TableColumn("Hobby");
+        columnThree.setCellValueFactory(new PropertyValueFactory<>("hobby"));
 
         tableView.setItems(dataList);
         tableView.getColumns().addAll(columnOne, columnTwo, columnThree);
-        tableView.setEditable(true);
-        
+
         Button btn1 = new Button("Open File");
         Button btn2 = new Button("Save File");
-        
+
         btn1.setPrefWidth(125);
         btn2.setPrefWidth(125);
-        
-        
+
         HBox hBox = new HBox(btn1, btn2);
         hBox.setSpacing(10);
-        
+
         VBox vBox = new VBox();
         vBox.setSpacing(7);
         vBox.setPadding(new Insets(10, 0, 0, 10));
@@ -88,78 +107,63 @@ public class CSVGUI extends Application {
 
         stage.setScene(new Scene(root, 280, 450));
         stage.show();
-        
-        
+
         btn1.setOnAction((event) -> chooseFile());
         btn2.setOnAction((event) -> saveFile());
-        
 
     }
-    
+
     public void saveFile() {
-        
+
         FileChooser fc = new FileChooser();
         fc.setTitle("Select A CSV File");
-        
-        fc.setInitialDirectory(new File("CSVGUI"));
+
+        // Not sure how this works. I couldn't change the directory no matter what I tried.
+        // Look for more examples online and in the docs.
+//        fc.setInitialDirectory(new File("CSVGUI"));
         fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV Files", "*.csv"));
-        
+
         File selectedFile = fc.showSaveDialog(null);
-        
-        if(selectedFile != null) {
+
+        if (selectedFile != null) {
             writeCSV(selectedFile.getPath());
         }
-        
+
     }
 
-    public void writeCSV(String fileName)  {
-        
+    public void writeCSV(String fileName) {
+
         try (CSVWriter csvWriter = new CSVWriter(new FileWriter(fileName))) {
-            
-            
-            
-            for(Record r : dataList) {
+
+            for (Record r : dataList) {
                 csvWriter.writeNext(r.getArray());
             }
-            
-            
+
         } catch (FileNotFoundException ex) {
+            System.out.println("The file was not found.");
             Logger.getLogger(CSVGUI.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
+            System.out.println("There was an IO exception.");
             Logger.getLogger(CSVGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        System.exit(0);
+
+//        System.exit(0);
     }
-    
 
     public void readCSV(String fileName) {
 
 //        String fileName = chooseFile();
-        
         try {
-            System.out.println("into the try block.");
-            
-                // declare instantiate reader.
-                // Set a FileReader to read from the file.
+            // declare instantiate reader.
+            // Set a FileReader to read from the file.
             try (CSVReader csvReader = new CSVReader(new FileReader(fileName))) {
 
-//            CSVReader csvReader = new CSVReader(new FileReader("users.csv"));
-                    
                 String[] nextLine;
-                
-                System.out.println("into the while loop.");
+
                 while ((nextLine = csvReader.readNext()) != null) {
-                    
-                    System.out.println("creating the record");
+
                     Record record = new Record(nextLine[0], nextLine[1], nextLine[2]);
-                    System.out.println("adding the record.");
                     dataList.add(record);
-                    
-//                for (String token : nextLine) {
-//                    System.out.println(token);
-//                }
-//                System.out.println("*****************");
                 }
             }
             System.out.println("closed.");
@@ -177,21 +181,18 @@ public class CSVGUI extends Application {
             System.out.println(e.getMessage());
 //            Logger.getLogger(CSVTable.class.getName()).log(Level.SEVERE, null, e);
         }
-
     }
-    
+
     public void chooseFile() {
-        
+
         FileChooser fc = new FileChooser();
         fc.setTitle("Select A CSV File");
-        
+
         File selectedFile = fc.showOpenDialog(null);
-        
-        if(selectedFile != null) {
+
+        if (selectedFile != null) {
             readCSV(selectedFile.getPath());
         }
-        
-        
     }
 
 }
