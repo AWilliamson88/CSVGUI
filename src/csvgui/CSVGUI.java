@@ -60,8 +60,9 @@ public class CSVGUI extends Application {
 
         tableView.setEditable(true);
         TableColumn columnOne = new TableColumn("First Name");
+        columnOne.setMinWidth(100);
         columnOne.setCellValueFactory(new PropertyValueFactory<>("firstName"));
-        // Add the code to edit the individual cells here.
+        
         columnOne.setCellFactory(TextFieldTableCell.<Record>forTableColumn());
         columnOne.setOnEditCommit(
                 new EventHandler<CellEditEvent<Record, String>>() {
@@ -72,6 +73,9 @@ public class CSVGUI extends Application {
             }
         }
         );
+        // Look online for why this isn't working.
+        // it says there's an error but nothing is underlined and the error
+        // isn't clear on the problem.
 //        columnOne.setOnEditCommit(
 //                (CellEditEvent<Record, String> t) -> {
 //                    ((Record) t.getTableView().getItems().get(
@@ -80,6 +84,7 @@ public class CSVGUI extends Application {
 //        });
 
         TableColumn columnTwo = new TableColumn("Last Name");
+        columnTwo.setMinWidth(100);
         columnTwo.setCellValueFactory(new PropertyValueFactory<>("lastName"));
         
         columnTwo.setCellFactory(TextFieldTableCell.forTableColumn());
@@ -95,7 +100,8 @@ public class CSVGUI extends Application {
         );
         
         
-        TableColumn columnThree = new TableColumn("Hobby");
+        TableColumn columnThree = new TableColumn("Hobbies");
+        columnThree.setMinWidth(150);
         columnThree.setCellValueFactory(new PropertyValueFactory<>("hobby"));
 
         columnThree.setCellFactory(TextFieldTableCell.forTableColumn());
@@ -119,18 +125,48 @@ public class CSVGUI extends Application {
         btn1.setPrefWidth(125);
         btn2.setPrefWidth(125);
 
-        HBox hBox = new HBox(btn1, btn2);
-        hBox.setSpacing(10);
+        final TextField addFirstName = new TextField();
+        addFirstName.setPromptText("First Name");
+        addFirstName.setMaxWidth(columnOne.getWidth());
+        
+        final TextField addLastName = new TextField();
+        addLastName.setPromptText("Last Name");
+        addLastName.setMaxWidth(columnTwo.getWidth());
+        
+        final TextField addHobby = new TextField();
+        addHobby.setPromptText("Hobbies");
+        addHobby.setMaxWidth(columnThree.getPrefWidth());
+        
+        Button btnAdd = new Button("Add");
+        
+        btnAdd.setOnAction(e -> {
+            dataList.add(new Record (
+                addFirstName.getText(),
+                addLastName.getText(),
+                addHobby.getText()));
+            addFirstName.clear();
+            addLastName.clear();
+            addHobby.clear();
+        });
+        
+        
+        HBox hBoxAdd = new HBox(addFirstName, addLastName, addHobby, btnAdd);
+        hBoxAdd.setSpacing(3);
+        
+        HBox hBoxIO = new HBox(btn1, btn2);
+        hBoxIO.setSpacing(10);
+        
 
         VBox vBox = new VBox();
         vBox.setSpacing(7);
-        vBox.setPadding(new Insets(10, 0, 0, 10));
+        vBox.setPadding(new Insets(10, 20, 0, 10));
         vBox.getChildren().add(tableView);
-        vBox.getChildren().add(hBox);
+        vBox.getChildren().add(hBoxAdd);
+        vBox.getChildren().add(hBoxIO);
 
         root.getChildren().add(vBox);
 
-        stage.setScene(new Scene(root, 280, 450));
+        stage.setScene(new Scene(root, 372, 500));
         stage.show();
 
         btn1.setOnAction((event) -> chooseFile());
