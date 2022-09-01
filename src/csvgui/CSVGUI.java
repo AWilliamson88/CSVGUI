@@ -27,8 +27,15 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 /**
- *
- * @author P113357
+ * Java 3 AT 2.6 
+ * Question 6 – 
+ * JMC receives output from many different programs in CSV format 
+ * you must write a program to display this data.
+ * You need to create a program that uses an external 3rd party library 
+ * to read and write data to a CSV. 
+ * This data must be displayed in a GUI (a table is fine).
+ * 
+ * @author Andrew Williamson / P113357
  */
 public class CSVGUI extends Application {
 
@@ -36,23 +43,14 @@ public class CSVGUI extends Application {
 
     final ObservableList<Record> dataList
             = FXCollections.observableArrayList();
-
-    /**
-     * @param args the command line arguments
-     */
+    
     public static void main(String[] args) {
         // TODO code application logic here
         launch(args);
     }
-
-    /**
-     *
-     * @param stage
-     * @throws Exception
-     */
+    
     @Override
     public void start(Stage stage) throws Exception {
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 
         stage.setTitle("CSV Table");
 
@@ -159,7 +157,7 @@ public class CSVGUI extends Application {
 
         VBox vBox = new VBox();
         vBox.setSpacing(7);
-        vBox.setPadding(new Insets(10, 20, 0, 10));
+        vBox.setPadding(new Insets(30, 20, 0, 10));
         vBox.getChildren().add(tableView);
         vBox.getChildren().add(hBoxAdd);
         vBox.getChildren().add(hBoxIO);
@@ -213,7 +211,6 @@ public class CSVGUI extends Application {
 
     public void readCSV(String fileName) {
 
-//        String fileName = chooseFile();
         try {
             // declare instantiate reader.
             // Set a FileReader to read from the file.

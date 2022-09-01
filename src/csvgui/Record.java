@@ -1,20 +1,19 @@
 package csvgui;
 
-
 import javafx.beans.property.SimpleStringProperty;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 /**
- *
- * @author P113357
+ * Java 3 AT 2.6 
+ * Question 6 – 
+ * JMC receives output from many different programs in CSV format 
+ * you must write a program to display this data.
+ * You need to create a program that uses an external 3rd party library 
+ * to read and write data to a CSV. 
+ * This data must be displayed in a GUI (a table is fine).
+ * 
+ * @author Andrew Williamson / P113357
  */
 public class Record {
-
-    
 
     private final SimpleStringProperty firstName;
     private final SimpleStringProperty lastName;
